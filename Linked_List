@@ -8,11 +8,46 @@ struct NODE {
 	struct NODE* next;
 };
 typedef struct NODE node;
-node* head; //head node pointer
+node* head = NULL; //initialize head node
 
 void INSERT(int data, int n); //data, position
 void PRINT(); //for print
-int main() {
 
+int main() {
+	INSERT(2, 1);
+	INSERT(3, 1);
+	INSERT(6, 3);
+	INSERT(-9, 1);
+	PRINT();
 	return 0;
+}
+
+void INSERT(int data, int n) {
+	node* temp1 = (node*)malloc(sizeof(node));
+	temp1->next = NULL;
+	temp1->data = data;
+	if (n == 1) {
+		temp1->next = head;
+		head = temp1;
+		return;
+	}
+	//if n>=2
+	node* temp2 = (node*)malloc(sizeof(node));
+	temp2 = head;
+	int i;
+	for (i = 0;i < n-2;i++) {
+		temp2 = temp2->next;
+	}
+	temp1->next = temp2->next;
+	temp2->next = temp1;
+	return;
+}
+
+void PRINT() {
+	node* temp = (node*)malloc(sizeof(node));
+	temp = head;
+	while (temp != NULL) {
+		printf("%d ", temp->data);
+		temp = temp->next;
+	}
 }
