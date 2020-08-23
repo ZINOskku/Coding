@@ -1,0 +1,20 @@
+#include <cstdio>
+#include <iostream>
+
+using namespace std;
+
+int array_i[10];
+int main(){
+	string a;
+	cin >> a;
+	int l = a.length();
+	for (int i = 0;i < l;i++)
+	{
+		array_i[a[i]-48]++;
+	}
+	for (int i = 9;i >= 0;i--) {
+		for (int j = 0;j < array_i[i];j++) {
+			cout << i;
+		}
+	}
+}
