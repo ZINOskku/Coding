@@ -1,0 +1,79 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+#include <stdlib.h>
+
+a[500001];
+temp[500001];
+b[8001];
+c[8001];
+void divide(int, int);
+void merge(int, int, int);
+int main() {
+	int N;
+	scanf("%d", &N);
+	int sum = 0;
+	for (int i = 0;i < N;i++) {
+		scanf("%d", a + i);
+		sum += a[i];
+		b[a[i] + 4000]++;
+	}
+	int max_b = b[0];
+	for (int i = 0;i < 8001;i++) {
+		if (max_b < b[i])
+			max_b = b[i];
+	}
+	int p=0;
+	for (int i = 0;i < 8001;i++) {
+		if (max_b == b[i]) {
+			c[p] = i - 4000;
+			p++;
+		}
+	}
+	int ma;
+	if (p == 1)
+		ma = c[0];
+	else
+		ma = c[1];
+
+	divide(0, N - 1);
+	printf("%0.0f\n%d\n%d\n%d", (double)sum / (double)N, !(N%2)?(a[N/2]+a[N/2-1])/2:a[N / 2], ma, a[N-1] - a[0]);
+}
+
+void divide(int left, int right) {
+	if (left >= right)
+		return;
+	int mid = (left + right) / 2;
+	divide(left, mid);
+	divide(mid + 1, right);
+	merge(mid, left, right);
+}
+void merge(int mid, int left, int right) {
+	int i = left;
+	int j = mid + 1;
+	int k = left;
+	while (i <= mid && j <= right) {
+		if (a[i] < a[j]) {
+			temp[k] = a[i];
+			i++;
+			k++;
+		}
+		else {
+			temp[k] = a[j];
+			j++;
+			k++;
+		}
+	}
+	while (i <= mid) {
+		temp[k] = a[i];
+		k++;
+		i++;
+	}
+	while (j <= right) {
+		temp[k] = a[j];
+		k++;
+		j++;
+	}
+	for (int i = left;i < k;i++)
+		a[i] = temp[i];
+}
