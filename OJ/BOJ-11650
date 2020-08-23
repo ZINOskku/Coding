@@ -1,0 +1,123 @@
+
+#define _CRT_SECURE_NO_WARNINGS
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+a[100000];
+b[100000];
+temp[100000];
+temp2[100000];
+c[200001];
+
+void divide1(int, int);
+void merge1(int, int, int);
+void divide(int, int);
+void merge(int, int, int);
+
+void divide1(int left, int right) {
+	if (left >= right)
+		return;
+	int mid = (left + right) / 2;
+	divide1(left, mid);
+	divide1(mid + 1, right);
+	merge1(mid, left, right);
+}
+void merge1(int mid, int left, int right) {
+	int i = left;
+	int j = mid + 1;
+	int k = left;
+	while (i <= mid && j <= right) {
+		if (a[i] < a[j]) {
+			temp[k] = a[i];
+			temp2[k] = b[i];
+			i++;
+			k++;
+		}
+		else {
+			temp[k] = a[j];
+			temp2[k] = b[j];
+			j++;
+			k++;
+		}
+	}
+	while (i <= mid) {
+		temp[k] = a[i];
+		temp2[k] = b[i];
+		k++;
+		i++;
+	}
+	while (j <= right) {
+		temp[k] = a[j];
+		temp2[k] = b[j];
+		k++;
+		j++;
+	}
+	for (int i = left;i < k;i++) {
+		a[i] = temp[i];
+		b[i] = temp2[i];
+	}
+}
+void divide(int left, int right) {
+	if (left >= right)
+		return;
+	int mid = (left + right) / 2;
+	divide(left, mid);
+	divide(mid + 1, right);
+	merge(mid, left, right);
+}
+void merge(int mid, int left, int right) {
+	int i = left;
+	int j = mid + 1;
+	int k = left;
+	while (i <= mid && j <= right) {
+		if (b[i] < b[j]) {
+			temp[k] = b[i];
+			i++;
+			k++;
+		}
+		else {
+			temp[k] = b[j];
+			j++;
+			k++;
+		}
+	}
+	while (i <= mid) {
+		temp[k] = b[i];
+		k++;
+		i++;
+	}
+	while (j <= right) {
+		temp[k] = b[j];
+		k++;
+		j++;
+	}
+	for (int i = left;i < k;i++)
+		b[i] = temp[i];
+}
+int main() {
+	int N;
+	int max = -100000;
+	scanf("%d", &N);
+	for (int i = 0;i < N;i++) {
+		scanf("%d%d", a+i,b+i);
+		if (max < a[i])
+			max = a[i];
+		c[a[i]+100000]++;
+	}
+	divide1(0, N - 1);
+	int left = 0;
+	int right = c[0];
+	for (int i = 0;i < max+100000;i++) { 
+		if (c[i] > 1) {
+			divide(left, right - 1);
+		}
+		left += c[i];
+		right += c[i+1];
+	}
+	for (int i = 0;i < N;i++) {
+		printf("%d %d\n", a[i], b[i]);
+	}
+}
+
