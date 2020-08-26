@@ -1,0 +1,124 @@
+
+#include <cstdio>
+#include <iostream>
+using namespace std;
+
+class strarr {
+public:
+	string str;
+	int slen;
+	strarr():str(""),slen(0){}
+};
+
+//mergesort
+
+void divide(strarr*, strarr*, int, int);
+void merge(strarr*, strarr*, int, int, int);
+
+void divide2(strarr*, strarr*, int, int);
+void merge2(strarr*, strarr*, int, int, int);
+
+void divide(strarr* list,strarr* temp, int left, int right) {
+	if (right <= left)
+		return;
+	int mid = (left + right) / 2;
+	divide(list,temp,left, mid);
+	divide(list,temp,mid + 1, right);
+	merge(list,temp,left, mid, right);
+}
+void merge(strarr* list,strarr*temp, int left, int mid, int right) {
+	int i = left;
+	int j = mid + 1;
+	int k = left;
+	while (i <= mid && j <= right) {
+		if (list[i].slen < list[j].slen) {
+			temp[k] = list[i];
+			k++;
+			i++;
+		}
+		else {
+			temp[k] = list[j];
+			k++;
+			j++;
+		}
+	}
+	while (i <= mid) {
+		temp[k] = list[i];
+		k++;
+		i++;
+	}
+	while (j <= right) {
+		temp[k] = list[j];
+		k++;
+		j++;
+	}
+	for (int i = left;i < k;i++) {
+		list[i] = temp[i];
+	}
+}
+
+void divide2(strarr* list, strarr* temp, int left, int right) {
+	if (right <= left)
+		return;
+	int mid = (left + right) / 2;
+	divide2(list, temp, left, mid);
+	divide2(list, temp, mid + 1, right);
+	merge2(list, temp, left, mid, right);
+}
+void merge2(strarr* list, strarr* temp, int left, int mid, int right) {
+	int i = left;
+	int j = mid + 1;
+	int k = left;
+	while (i <= mid && j <= right) {
+		if ((list[i].str).compare(list[j].str) < 0) {
+			temp[k] = list[i];
+			k++;
+			i++;
+		}
+		else {
+			temp[k] = list[j];
+			k++;
+			j++;
+		}
+	}
+	while (i <= mid) {
+		temp[k] = list[i];
+		k++;
+		i++;
+	}
+	while (j <= right) {
+		temp[k] = list[j];
+		k++;
+		j++;
+	}
+	for (int i = left;i < k;i++) {
+		list[i] = temp[i];
+	}
+}
+
+int main() {
+	
+	int N;
+	cin >> N;
+	strarr* sarr = new strarr[N+1];
+	strarr* temp = new strarr[N];
+	for (int i = 0;i < N;i++) {
+		cin >> sarr[i].str;
+		sarr[i].slen = (sarr[i].str).length();
+	}
+	divide(sarr, temp, 0, N - 1);
+	int j = 0;
+	for (int i = 0;i < N;i++) {
+		if (sarr[i].slen != sarr[i + 1].slen) {
+			divide2(sarr,temp,j, i);
+			j = i + 1;
+		}
+	}
+	for (int i = 0;i < N;i++) {
+		if(sarr[i].str!=sarr[i+1].str)
+			cout << sarr[i].str << endl;
+	}
+	delete[] sarr;
+	delete[] temp;
+	return 0;
+}
