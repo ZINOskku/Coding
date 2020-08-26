@@ -1,0 +1,72 @@
+
+#include <cstdio>
+#include <iostream>
+using namespace std;
+
+class member {
+public:
+	string str;
+	int age;
+	member():str(""),age(0){}
+};
+
+void divide(member*, member*, int, int);
+void merge(member*, member*, int, int, int);
+
+void divide(member* list,member* temp, int left, int right) {
+	if (right <= left)
+		return;
+	int mid = (left + right) / 2;
+	divide(list,temp,left, mid);
+	divide(list,temp,mid + 1, right);
+	merge(list,temp,left, mid, right);
+}
+void merge(member* list,member*temp, int left, int mid, int right) {
+	int i = left;
+	int j = mid + 1;
+	int k = left;
+	while (i <= mid && j <= right) {
+		if (list[i].age <= list[j].age) {
+			temp[k] = list[i];
+			k++;
+			i++;
+		}
+		else {
+			temp[k] = list[j];
+			k++;
+			j++;
+		}
+	}
+	while (i <= mid) {
+		temp[k] = list[i];
+		k++;
+		i++;
+	}
+	while (j <= right) {
+		temp[k] = list[j];
+		k++;
+		j++;
+	}
+	for (int i = left;i < k;i++) {
+		list[i] = temp[i];
+	}
+}
+
+
+int main() {
+	int N;
+	cin >> N;
+	member* sarr = new member[N];
+	member* temp = new member[N];
+	for (int i = 0;i < N;i++) {
+		cin >> sarr[i].age>>sarr[i].str;
+	}
+	divide(sarr, temp, 0, N - 1);
+	for (int i = 0;i < N;i++) {
+		cout <<sarr[i].age<<" "<< sarr[i].str << "\n";
+	}
+	delete[] sarr;
+	delete[] temp;
+	return 0;
+}
+
