@@ -1,0 +1,32 @@
+
+
+#include <cstdio>
+#include <iostream>
+using namespace std;
+int min3(int a, int b, int c) {
+	if (a < b && a < c)
+		return a;
+	if (b < c)
+		return b;
+	return c;
+}
+int main() {
+	int N;
+	cin >> N;
+	int carr[1000][3];
+	int dp[1000][3];
+	for (int i = 0;i < N;i++) {
+		cin >> carr[i][0] >> carr[i][1] >> carr[i][2];
+	}
+	dp[0][0] = carr[0][0];
+	dp[0][1] = carr[0][1];
+	dp[0][2] = carr[0][2];
+
+	for (int k = 1;k < N;k++) {
+		dp[k][0] = min(dp[k - 1][1], dp[k - 1][2]) + carr[k][0];
+		dp[k][1] = min(dp[k - 1][0], dp[k - 1][2]) + carr[k][1];
+		dp[k][2] = min(dp[k - 1][1], dp[k - 1][0]) + carr[k][2];
+	}
+
+	cout << min3(dp[N - 1][0],dp[N-1][1],dp[N-1][2]);
+}
